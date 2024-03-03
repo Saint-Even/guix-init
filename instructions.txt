@@ -1,0 +1,103 @@
+#set UEFI to boot from USB
+       at boot: [fn][F12...]
+       reset to defaults
+       reboot with image on stick inserted
+       at boot: [fn][F12...]
+       choose usb
+       at blue screen
+       [ctl][alt][fn][F3]
+
+#write partitions
+       lsblk
+       parted /dev/nvme0n1
+       mklabel gpt
+       #EFI
+       mkpart "efi-partition" fat32 1MiB 500MiB
+       #SWAP
+       mkpart "swap-partition" linux-swap 500MiB 4.5GiB
+       #ROOT
+       mkpart "root-partition" ext4 4.5GiB 44.5GiB
+       #HOME
+       mkpart "home-partition" ext4 44.5GiB 100%
+       quit
+
+#write filesystems
+       lsblk -f
+       #EFI
+       #... already done??? mkfs -t fat32 /dev/nvme0n1p1
+       #SWAP
+       mkswap /dev/nvme0n1p2
+       #ROOT
+       cryptsetup luksFormat /dev/nvme0n1p3 #...follow prompts
+       cryptsetup open /dev/nvme0n1p3 root-luks
+       mkfs -t ext4 -L root-partition /dev/mapper/root-luks
+       #HOME
+       cryptsetup luksFormat /dev/nvme0n1p4 #...follow prompts
+       cryptsetup open /dev/nvme0n1p4 home-luks
+       mkfs -t ext4 -L home-partition /dev/mapper/home-luks
+
+#mount disks
+       #ROOT
+       mount /dev/mapper/root-luks /mnt
+       #EFI
+       mkdir -p /mnt/boot/efi
+       mount /dev/nvme0n1p1 /mnt/boot/efi
+       #SWAP
+       swapon /dev/nvme0n1p2
+       #HOME
+       mkdir /mnt/home
+       mount /dev/mapper/home-luks /mnt/home
+
+#setup eth connection
+       ifconfig -a
+       ifconfig eno1 up
+       dhclient -v eno1
+       ping -c 3 gnu.org
+
+# clone init files
+       guix install git
+       cd ~
+       git config --global http.sslVerify false
+       git clone "https://github.com/Saint-Even/guix-init.git"
+       cd guix-init/
+       mv ...basic.scm ..
+
+# set up minimal system
+       cd ~
+       cp /etc/configuration/desktop.scm ~
+       ...git clone would be preferable for template
+       #get info for config
+       echo ";;All devices"
+       lsblk -f >> desktop.scm
+       echo ";;time zone"
+       tzselect >> desktop.scm
+       echo ";;All locales"
+       locale -a >> desktop.scm
+       guix install vim
+       vim desktop.scm
+
+# install minimal guix system
+       mkdir -p /mnt/etc
+       cp desktop.scm /mnt/etc/config.scm
+       herd start cow-store /mnt
+       guix system init /mnt/etc/config.scm /mnt
+       reboot
+
+# first login
+  #change passwords
+  sudo passwd #root
+  passwd #user
+  #save file used to boot
+  mkdir -p ~/.config/guix
+  cp /etc/config.scm ~/.config/guix/config.scm
+  chmod +w config.scm
+
+# clone init files
+       guix install git
+       cd ~
+       git clone "https://github.com/Saint-Even/guix-init.git"
+       cd guix-init/
+       ...move files into position, home, channels, fullconfig
+  guix pull
+  sudo -E guix system reconfigure ~/.config/guix/config.scm
+  reboot

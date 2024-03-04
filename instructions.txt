@@ -95,7 +95,7 @@
        guix install git
        guix install vim
        cd ~
-       git clone "https://github.com/Saint-Even/guix-init.git"
+       git clone "https://github.com/saint-even/guix-init.git"
        cd guix-init/
 
 # prep config
@@ -111,8 +111,12 @@
        mv config.scm ~/.config/guix/config.scm
 
 #instantiate system
+  guix install curl
+  key=$(curl https://substitutes.nonguix.org/signing-key.pub)
+  sudo guix archive --authorize ${key}
   guix pull
-  #hash guix #what does this do?
+  hash guix 
   #sudo -E ?
-  sudo guix system reconfigure ~/.config/guix/config.scm
+  sudo guix system reconfigure ~/.config/guix/config.scm --substitute-urls='https://ci.guix.gnu.org https://bordeaux.guix.gnu.org https://substitutes.nonguix.org'
+
   reboot

@@ -89,8 +89,7 @@
   passwd #user
   #save file used to boot
   mkdir -p ~/.config/guix
-  cp /etc/config.scm ~/.config/guix/config.scm
-  chmod +w config.scm
+  mv /etc/config.scm ~/.config/guix/basic-config.scm
 
 # clone init files
        guix install git
@@ -98,7 +97,22 @@
        cd ~
        git clone "https://github.com/Saint-Even/guix-init.git"
        cd guix-init/
-       ...move files into position, home, channels, fullconfig
+
+# prep config
+       cat system.scm > config.scm
+       echo '#!' >> config.scm
+       echo "BASIC.SCM" >> config.scm
+       cat ~/.config/guix/basic-config.scm >> config.scm
+       echo '!#' >> config.scm
+       vim config.scm # complete fields 
+
+# move files into position
+       cp channels.scm ~/.config/guix/channels.scm
+       mv config.scm ~/.config/guix/config.scm
+
+#instantiate system
   guix pull
-  sudo -E guix system reconfigure ~/.config/guix/config.scm
+  #hash guix #what does this do?
+  #sudo -E ?
+  sudo guix system reconfigure ~/.config/guix/config.scm
   reboot

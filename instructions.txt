@@ -116,7 +116,10 @@
   sudo guix archive --authorize ${key}
   guix pull
   hash guix 
-  #sudo -E ?
   sudo guix system reconfigure ~/.config/guix/config.scm --substitute-urls='https://ci.guix.gnu.org https://bordeaux.guix.gnu.org https://substitutes.nonguix.org'
+  sudo reboot
 
-  reboot
+#modifying system
+  edit config
+  guix pull
+  sudo guix system reconfigure ~/.config/guix/config.scm 

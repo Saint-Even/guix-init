@@ -32,7 +32,7 @@
        pulseaudio ;for pulseaudio
        certs
        xdisorg 
-       xorg);bootloaders ccache cups databases emacs fonts geo gnome gnupg guile guile-xyz nano ntp ssh suckless tex gnuzilla
+       xorg);bootloaders ccache cups databases emacs fonts geo gnupg guile guile-xyz nano ntp ssh suckless tex gnuzilla
 
      (use-service-modules
        pm ;for thermald-service-type
@@ -51,8 +51,8 @@
 
      (operating-system
        (host-name "guix")
-       (timezone "America/Winnipeg")
-       (locale "en_CA.utf8")
+       (timezone "XXX")
+       (locale "XXX")
        (keyboard-layout
         (keyboard-layout "us"))
 
@@ -61,45 +61,10 @@
        (firmware (list linux-firmware))
        (initrd microcode-initrd)
 
-  ;; Use the UEFI variant of GRUB with the EFI System
-  ;; Partition mounted on /boot/efi.
-  (bootloader (bootloader-configuration
-                (bootloader grub-efi-bootloader)
-                (targets '("/boot/efi"))
-                (keyboard-layout keyboard-layout)))
-
-  ;; Specify a mapped device for the encrypted root partition.
-  ;; The UUID is that returned by 'cryptsetup luksUUID'.
-  (mapped-devices
-   (list (mapped-device
-          (source (uuid "be506786-63b6-4955-961d-a9c444550036"))
-          (target "root-partition")
-          (type luks-device-mapping))
-	 (mapped-device
-          (source (uuid "48dec2a1-ae4c-4965-93ca-e369a0302af2"))
-          (target "home-partition")
-          (type luks-device-mapping))))
-
-  (file-systems (append
-                 (list (file-system
-                         (device (file-system-label "root-partition"))
-                         (mount-point "/")
-                         (type "ext4")
-                         (dependencies mapped-devices))
-		       (file-system
-                         (device (file-system-label "home-partition"))
-                         (mount-point "/home")
-                         (type "ext4")
-                         (dependencies mapped-devices))
-                       (file-system
-                         (device (uuid "D2B4-0D5D" 'fat))
-                         (mount-point "/boot/efi")
-                         (type "vfat")))
-                 %base-file-systems))
-
-  ;; Specify a swap partition for the system
-  (swap-devices (list (swap-space
-                       (target (uuid "43b8a075-1434-4aa9-9bef-9a85f86f1b1e")))))
+	(bootloader (XXX))
+	(mapped-devices (XXX))
+	(file-systems (XXX))
+	(swap-devices (XXX))
 
        (groups (cons (user-group
 		       (system? #t) 
@@ -146,7 +111,6 @@
 	       screen
 	       sbcl
 	       stumpwm 
-	       ;'(,stupmwm "lib") ;for stumpwm ;!! source of error??
 	       python
 	       nyxt
 	       bluez ;bluetooth protocol
@@ -164,10 +128,6 @@
 	 (service openssh-service-type)
 	 (service docker-service-type)
 	 (service thermald-service-type)
-         ; extra(service dhcp-client-service-type)
-         ; extra(service avahi-service-type)
-         ; extra(dbus-service)
-         ;extra??(elogind-service)
 	 (service tlp-service-type ;power management service
 	 	  (tlp-configuration
 	 	    (cpu-boost-on-ac? #t)

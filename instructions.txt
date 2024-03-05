@@ -12,12 +12,12 @@
        dhclient -v eno1
        ping -c 3 gnu.org
 
-# clone init files
+# clone init files (shell)
        guix install git
        cd ~
        git config --global http.sslVerify false
        git clone "https://github.com/Saint-Even/guix-init.git"
-       follow instructions.txt
+       #follow instructions.txt
 
 #write partitions
        lsblk
@@ -60,7 +60,7 @@
        mkdir /mnt/home
        mount /dev/mapper/home-luks /mnt/home
 
-# set up basic system
+# set up basic system (shell)
        cd ~/guix-init/
        cp basic.scm ~
        cd ~
@@ -76,7 +76,7 @@
        guix install vim
        vim basic.scm
 
-# install minimal guix system, pure GNU!
+# install minimal guix system, pure GNU! (shell)
        mkdir -p /mnt/etc
        cp basic.scm /mnt/etc/config.scm
        herd start cow-store /mnt
@@ -91,26 +91,26 @@
   mkdir -p ~/.config/guix
   mv /etc/config.scm ~/.config/guix/basic-config.scm
 
-# clone init files
+# clone init files (shell)
        guix install git
        guix install vim
        cd ~
        git clone "https://github.com/saint-even/guix-init.git"
        cd guix-init/
 
-# prep config
-       cat system.scm > config.scm
+# prep config (shell)
+       cat full-config.scm > config.scm
        echo '#!' >> config.scm
        echo "BASIC.SCM" >> config.scm
        cat ~/.config/guix/basic-config.scm >> config.scm
        echo '!#' >> config.scm
        vim config.scm # complete fields 
 
-# move files into position
+# move files into position (shell)
        cp channels.scm ~/.config/guix/channels.scm
        mv config.scm ~/.config/guix/config.scm
 
-#instantiate system
+#instantiate system (shell)
   guix install curl
   key=$(curl https://substitutes.nonguix.org/signing-key.pub)
   sudo guix archive --authorize ${key}

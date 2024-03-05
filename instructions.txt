@@ -17,7 +17,7 @@
        cd ~
        git config --global http.sslVerify false
        git clone "https://github.com/Saint-Even/guix-init.git"
-       #follow instructions.txt
+       #follow these instructions.txt
 
 #write partitions
        lsblk

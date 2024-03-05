@@ -1,6 +1,6 @@
 # guix-init
 
-#set UEFI to boot from USB
+# set UEFI to boot from USB
        at boot: [fn][F12...]
        reset to defaults
        reboot with standared guixSD image on stick
@@ -8,7 +8,7 @@
        choose usb
        at blue screen: [ctl][alt][fn][F3]
 
-#setup eth connection
+# setup eth connection
        ifconfig -a
        ifconfig eno1 up
        dhclient -v eno1

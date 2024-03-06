@@ -1,4 +1,5 @@
 # guix-init
+This is a guix initialization speedrun. From standard guix iso with wired internet, to pure GNU guix workstation, to dirty wifi enabled nonguix lisp based machine. The whole setup takes about 1 hour of effort, and 3-5 hours of download
 
 # set UEFI to boot from USB
        at boot: [fn][F12...]

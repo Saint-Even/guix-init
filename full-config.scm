@@ -30,9 +30,11 @@
        file-systems ;for exfat-utils
        audio ;for bluez-alsa
        pulseaudio ;for pulseaudio
+       sync ; for rclone
+       terminals ; for tilix
        certs
        xdisorg 
-       xorg);bootloaders ccache cups databases emacs fonts geo gnupg guile guile-xyz nano ntp ssh suckless tex gnuzilla
+       xorg);bootloaders ccache cups databases emacs fonts geo gnome gnupg guile guile-xyz nano ntp ssh suckless tex gnuzilla
 
      (use-service-modules
        pm ;for thermald-service-type
@@ -50,7 +52,7 @@
        xorg)
 
      (operating-system
-       (host-name "guix")
+       (host-name "lambda")
        (timezone "XXX")
        (locale "XXX")
        (keyboard-layout
@@ -61,20 +63,15 @@
        (firmware (list linux-firmware))
        (initrd microcode-initrd)
 
-	(bootloader (XXX))
-	(mapped-devices (XXX))
-	(file-systems (XXX))
-	(swap-devices (XXX))
-
-       (groups (cons (user-group
-		       (system? #t) 
-		       (name "additional-group"))
-		     %base-groups))
+       (bootloader (XXX))
+       (mapped-devices (XXX))
+       (file-systems (XXX))
+       (swap-devices (XXX))
 
        (users (cons*
          (user-account
           (name "user")
-          (comment "generic user")
+          (comment "generic-user")
           (group "users")
 	  (home-directory "/home/user")
           (supplementary-groups '("wheel" ;;sudo
@@ -111,8 +108,10 @@
 	       screen
 	       sbcl
 	       stumpwm 
-	       python
+	       rclone
+	       tilix
 	       nyxt
+	       python
 	       bluez ;bluetooth protocol
 	       bluez-alsa ;bluetooth audio
 	       pulseaudio ;audio server
@@ -125,6 +124,8 @@
 
        (services
         (cons*
+	 (service lxqt-desktop-service-type)
+	 (service gnome-desktop-service-type)
 	 (service openssh-service-type)
 	 (service docker-service-type)
 	 (service thermald-service-type)

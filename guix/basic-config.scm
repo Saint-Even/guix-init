@@ -1,5 +1,5 @@
 ;; This is a basic guix operating system configuration template
-;; <INCOMPLETE> fields have data at the document
+;; <INCOMPLETE> fields have data at the &&& document
 
 (use-modules (gnu) (gnu system nss) (guix utils))
 (use-service-modules desktop sddm xorg)
